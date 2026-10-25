@@ -58,7 +58,7 @@ export type Quality = "draft" | "standard" | "high";
 export interface CaptionStyle {
   preset?: CaptionPreset;
   font?: "Montserrat" | "Anton" | "Bebas Neue" | "Poppins";
-  position?: "top" | "middle" | "bottom";
+  position?: "top" | "middle" | "bottom" | "center";
   /** Words on screen at once, 1..8 */
   max_words?: number;
   uppercase?: boolean;
@@ -92,7 +92,7 @@ export type ShortRequest = TopicOrScript & {
   voice?: EnVoice | EsVoice;
   music?: MusicMood;
   /** Defaults to the style's preset; `false` turns captions off */
-  captions?: false | CaptionPreset | CaptionStyle;
+  captions?: boolean | CaptionPreset | CaptionStyle;
   webhook_url?: string;
 };
 
