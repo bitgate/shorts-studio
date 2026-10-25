@@ -48,6 +48,9 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "workerd"
-    ]
+    ],
+    "overrides": {
+      "undici@>=7.0.0 <7.30.1": "^7.30.1"
+    }
   }
 }
