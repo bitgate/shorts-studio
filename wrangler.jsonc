@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "shorts-studio",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-19",
+  // Lets the Worker reach the API even from the same Cloudflare zone (without it, fetch() gets a 522)
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "vars": {
+    "REELAPI_BASE_URL": "https://reelapi.bitgate.dev"
+  },
+  "env": {
+    "demo": {
+      "workers_dev": false,
+      "routes": [{ "pattern": "shorts-studio.bitgate.dev/*", "zone_name": "bitgate.dev" }],
+      "vars": {
+        "REELAPI_BASE_URL": "https://reelapi.bitgate.dev"
+      }
+    }
+  }
+}

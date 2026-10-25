@@ -1,0 +1,122 @@
+@import "tailwindcss";
+@import "@fontsource-variable/anybody/wdth.css";
+@import "@fontsource-variable/spline-sans";
+@import "@fontsource-variable/spline-sans-mono";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Spline Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Anybody Variable", "Spline Sans Variable", ui-sans-serif, sans-serif;
+  --font-mono: "Spline Sans Mono Variable", ui-monospace, monospace;
+
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-field: var(--field);
+  --color-raised: var(--raised);
+  --color-edge: var(--edge);
+  --color-ink: var(--ink);
+  --color-dim: var(--dim);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-glow: var(--glow);
+  --color-rec: var(--rec);
+  --color-danger: var(--danger);
+
+  --animate-blink: blink 1.1s steps(2, jump-none) infinite;
+  --animate-sweep: sweep 1.4s ease-in-out infinite;
+  --animate-scan: scan 2.8s linear infinite;
+
+  @keyframes blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes sweep {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes scan {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(340%);
+    }
+  }
+}
+
+:root {
+  --canvas: #f2f0e9;
+  --panel: #fbfaf6;
+  --field: #e8e5db;
+  --raised: #ffffff;
+  --edge: #d5d1c3;
+  --ink: #161613;
+  --dim: #5b584e;
+  --accent: #161613;
+  --on-accent: #d9ff43;
+  --glow: #161613;
+  --rec: #e0301e;
+  --danger: #b3261e;
+  color-scheme: light;
+}
+
+:root.dark {
+  --canvas: #0f0f0d;
+  --panel: #171714;
+  --field: #22221e;
+  --raised: #3a3a33;
+  --edge: #34342d;
+  --ink: #f3f1ea;
+  --dim: #a3a094;
+  --accent: #d9ff43;
+  --on-accent: #12130e;
+  --glow: #d9ff43;
+  --rec: #ff5440;
+  --danger: #ff8a7a;
+  color-scheme: dark;
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-stretch: 118%;
+  font-weight: 780;
+  letter-spacing: -0.015em;
+}
+
+@layer base {
+  html {
+    background: var(--canvas);
+    color: var(--ink);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  button,
+  select,
+  label:has(> input[type="radio"]) {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+}
