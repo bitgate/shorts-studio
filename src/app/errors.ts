@@ -24,8 +24,9 @@ export function describeFailure(code: string, status: number, message: string): 
     case "UNSUPPORTED_LANGUAGE":
       return { title: "Language not supported", hint: message, fixInput: true };
     case "NETWORK_ERROR":
-    case "UPSTREAM_UNREACHABLE":
       return { title: "Can't connect", hint: "Check your connection, then try again.", fixInput: false };
+    case "UPSTREAM_UNREACHABLE":
+      return { title: "Can't reach reelapi", hint: "The server couldn't reach the video API. Try again in a moment.", fixInput: false };
     case "CONNECTION_LOST":
       return { title: "Lost track of this one", hint: "It's probably still rendering. Reconnect to check on it.", fixInput: false };
     case "MISSING_API_KEY":

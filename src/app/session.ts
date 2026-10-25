@@ -51,7 +51,7 @@ export function issuesToFields(issues: Issue[]): FieldErrors {
   for (const issue of issues) {
     const root = issue.path.split(/[.[]/)[0] ?? "";
     const field = FIELD_BY_PATH[root] ?? "form";
-    errors[field] ??= issue.message;
+    errors[field] ??= field === "form" && issue.path ? `${issue.path}: ${issue.message}` : issue.message;
   }
 
   return errors;

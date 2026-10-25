@@ -120,7 +120,7 @@ function Progress({ aspect, image, job, startedAt, reconnecting = false }: Frame
         <Backdrop src={image} mode="blur" />
         <span className="absolute inset-x-0 top-0 h-[30%] animate-scan bg-gradient-to-b from-transparent via-white/12 to-transparent" />
         <Viewfinder />
-        <span className="absolute top-[6.5%] left-[8%] flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 font-mono text-[12px] text-white tabular-nums backdrop-blur-md">
+        <span className="absolute top-[calc(5%+3cqmin)] left-[calc(5%+3cqmin)] flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 font-mono text-[12px] text-white tabular-nums backdrop-blur-md">
           <span className="size-2 animate-blink rounded-full bg-rec" />
           {formatClock(elapsed)}
         </span>
@@ -135,7 +135,7 @@ function Progress({ aspect, image, job, startedAt, reconnecting = false }: Frame
       <div className="mx-auto mt-6 max-w-[340px]">
         <div className="flex gap-1.5" aria-hidden="true">
           {STAGES.map((stage, position) => (
-            <span key={stage.id} className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-field">
+            <span key={stage.id} className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-edge">
               {position < index && <span className="absolute inset-0 bg-accent" />}
               {position === index && (
                 <span className="absolute inset-0 animate-sweep bg-gradient-to-r from-transparent via-accent to-transparent" />
@@ -199,7 +199,7 @@ function Failure({ aspect, image, failure, code, onRetry, onEdit }: FrameProps &
 function Notice({ aspect, image, icon, title, hint, code, children }: FrameProps & { icon: IconName; title: string; hint: string; code?: string; children: ReactNode }) {
   return (
     <div>
-      <Screen aspect={aspect} reserve={330}>
+      <Screen aspect={aspect} reserve={330} reserveLg={350}>
         <Backdrop src={image} mode="dim" />
         <span className="absolute inset-0 grid place-items-center">
           <span className="grid size-14 place-items-center rounded-full bg-black/60 text-white backdrop-blur-md">
@@ -225,7 +225,7 @@ function Result({ job, request, aspect, onBack, onVideoError }: { job: ShortJob;
 
   return (
     <div>
-      <Screen aspect={aspect} reserve={340}>
+      <Screen aspect={aspect} reserve={340} reserveLg={440}>
         {video ? (
           <video
             key={job.id}
@@ -342,5 +342,6 @@ function DownloadButton({ url, filename }: { url: string; filename: string }) {
 }
 
 export function previewDetails(aspect: Aspect, seconds: number | null, voice: string | null): string[] {
-  return [OUTPUT_SIZES[aspect], seconds ? `${seconds}s` : "script length", voice ? `voice ${voice}` : "default voice"];
+  const voiceName = voice ? voice.charAt(0).toUpperCase() + voice.slice(1) : "Default";
+  return [OUTPUT_SIZES[aspect], seconds ? `${seconds}s` : "Script length", `${voiceName} voice`];
 }

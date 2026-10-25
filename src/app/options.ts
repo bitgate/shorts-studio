@@ -70,6 +70,6 @@ export const SCRIPT_MAX = 3000;
 
 export const EXAMPLE_TOPICS = [
   "The ghost ship Mary Celeste",
-  "Why octopuses have three hearts",
-  "The Great Emu War of 1932",
+  "Why octopuses have 3 hearts",
+  "The Great Emu War",
 ];

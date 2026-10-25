@@ -69,7 +69,9 @@ export function Composer({ settings, errors, busy, onChange, onGenerate }: Compo
           <h1 className="display text-[27px] leading-none sm:text-[34px]">
             <label htmlFor="prompt">{isScript ? "Your script" : "What's it about?"}</label>
           </h1>
-          <Segmented label="Input" value={settings.mode} options={MODE_OPTIONS} onChange={(mode) => onChange({ mode })} />
+          <div className="shrink-0">
+            <Segmented label="Input" value={settings.mode} options={MODE_OPTIONS} onChange={(mode) => onChange({ mode })} />
+          </div>
         </div>
 
         <div
@@ -103,13 +105,13 @@ export function Composer({ settings, errors, busy, onChange, onGenerate }: Compo
         <FieldError message={textError} />
 
         {!isScript && !settings.topic.trim() && (
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0">
             {EXAMPLE_TOPICS.map((topic) => (
               <button
                 key={topic}
                 type="button"
                 onClick={() => onChange({ topic })}
-                className="h-8 rounded-full border border-edge px-3 text-[13px] text-dim transition-colors hover:border-dim hover:text-ink"
+                className="h-8 shrink-0 rounded-full border border-edge px-3 text-[13px] whitespace-nowrap text-dim transition-colors hover:border-dim hover:text-ink"
               >
                 {topic}
               </button>
@@ -186,18 +188,17 @@ export function Composer({ settings, errors, busy, onChange, onGenerate }: Compo
         />
       </section>
 
-      <div>
-        <div className="sticky bottom-4 z-10">
-          <button
-            type="submit"
-            disabled={busy}
-            className={buttonClass("primary", "h-14 w-full text-[17px] shadow-[0_12px_32px_-12px_rgb(0_0_0/0.55)]")}
-          >
-            {busy && <Icon name="spinner" className="size-5" />}
-            {busy ? "Starting" : "Generate short"}
-          </button>
-        </div>
-        <FieldError message={errors.form} />
+      <div className="sticky bottom-0 z-10 -mx-4 -mt-3 bg-canvas px-4 pt-3 pb-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+        <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-full h-8 bg-linear-to-t from-canvas to-transparent" />
+        {errors.form && (
+          <div className="mb-3">
+            <FieldError message={errors.form} />
+          </div>
+        )}
+        <button type="submit" disabled={busy} className={buttonClass("primary", "h-14 w-full text-[17px]")}>
+          {busy && <Icon name="spinner" className="size-5" />}
+          {busy ? "Starting" : "Generate short"}
+        </button>
       </div>
     </form>
   );

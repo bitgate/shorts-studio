@@ -1,17 +1,21 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { Aspect, CaptionPreset } from "../lib/reelapi";
 import { cn } from "./ui";
 
 const RATIO: Record<Aspect, number> = { "9:16": 9 / 16, "1:1": 1, "16:9": 16 / 9 };
 const MAX_WIDTH: Record<Aspect, number> = { "9:16": 340, "1:1": 420, "16:9": 640 };
 
-/** A phone for 9:16, a plain screen otherwise. `reserve` is the vertical room kept free for content below it */
-export function Screen({ aspect, reserve, children }: { aspect: Aspect; reserve: number; children: ReactNode }) {
+/** A phone for 9:16, a plain screen otherwise. `reserve` is the vertical room kept free around it, `reserveLg` on desktop */
+export function Screen({ aspect, reserve, reserveLg = reserve, children }: { aspect: Aspect; reserve: number; reserveLg?: number; children: ReactNode }) {
   const phone = aspect === "9:16";
-  const width = `min(100%, ${MAX_WIDTH[aspect]}px, max(220px, calc((100dvh - ${reserve}px) * ${RATIO[aspect]})))`;
+  const style = {
+    "--reserve-sm": `${reserve}px`,
+    "--reserve-lg": `${reserveLg}px`,
+    width: `min(100%, ${MAX_WIDTH[aspect]}px, max(180px, calc((100dvh - var(--reserve)) * ${RATIO[aspect]})))`,
+  } as CSSProperties;
 
   return (
-    <div className="mx-auto" style={{ width }}>
+    <div className="mx-auto [--reserve:var(--reserve-sm)] lg:[--reserve:var(--reserve-lg)]" style={style}>
       <div
         className={cn(
           "bg-[#0a0a09] shadow-[0_32px_64px_-32px_rgb(0_0_0/0.55)] ring-1 ring-black/40 dark:ring-white/10",
