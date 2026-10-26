@@ -4,8 +4,6 @@ import { parseShortRequest } from "./validate";
 interface Env {
   REELSDK_KEY?: string;
   REELSDK_BASE_URL?: string;
-  REELAPI_KEY?: string;
-  REELAPI_BASE_URL?: string;
   ACCESS_CODE?: string;
 }
 
@@ -19,13 +17,12 @@ export default {
     const denied = await checkAccessCode(request, env);
     if (denied) return denied;
 
-    // Deployments from before the rename only have the REELAPI_* names
-    const apiKey = env.REELSDK_KEY || env.REELAPI_KEY;
+    const apiKey = env.REELSDK_KEY;
     if (!apiKey) {
       return fail(500, "MISSING_API_KEY", "REELSDK_KEY is not set. Put it in .dev.vars locally, or run `wrangler secret put REELSDK_KEY`.");
     }
 
-    const reel = new ReelSdk({ apiKey, baseUrl: env.REELSDK_BASE_URL || env.REELAPI_BASE_URL || undefined });
+    const reel = new ReelSdk({ apiKey, baseUrl: env.REELSDK_BASE_URL || undefined });
 
     try {
       if (pathname === "/api/shorts") {

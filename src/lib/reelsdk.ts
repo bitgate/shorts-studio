@@ -378,7 +378,7 @@ export class ReelSdk {
 }
 
 /**
- * Checks a webhook's `Reel-Signature: t=<unix>,v1=<hex>` header, an HMAC-SHA256 of `${t}.${rawBody}`.
+ * Checks a webhook's `Reelsdk-Signature: t=<unix>,v1=<hex>` header, an HMAC-SHA256 of `${t}.${rawBody}`.
  * `secret` is your key's `whsec_...` webhook secret, not the API key. Pass the raw body, before JSON.parse.
  */
 export async function verifyWebhook(

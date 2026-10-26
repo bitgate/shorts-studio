@@ -40,7 +40,7 @@
   "cloudflare": {
     "bindings": {
       "REELSDK_KEY": {
-        "description": "Your reelsdk key (`rk_live_...`). Get one at [reelsdk.com](https://reelsdk.com)."
+        "description": "Your reelsdk key (`rsdk_live_...`). Get one at [reelsdk.com](https://reelsdk.com)."
       }
     }
   },

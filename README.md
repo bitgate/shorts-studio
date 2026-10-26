@@ -8,7 +8,7 @@ Type a topic, get a finished short: script, AI images, voiceover, word-by-word c
 
 ## Run it
 
-1. Get a reelsdk key (`rk_live_...`) at [reelsdk.com](https://reelsdk.com).
+1. Get a reelsdk key (`rsdk_live_...`) at [reelsdk.com](https://reelsdk.com).
 2. `cp .dev.vars.example .dev.vars` and paste the key in.
 3. `pnpm install && pnpm dev`, then open http://localhost:5173. Ship it with `pnpm run deploy`.
 

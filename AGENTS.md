@@ -41,7 +41,7 @@ Base URL `https://api.reelsdk.com`. Guide: https://api.reelsdk.com/llms.txt. Ful
 - Results are absolute URLs in `job.outputs` (`video`, `poster`, `transcript`, `srt`, `vtt`; ffmpeg outputs by filename). They expire after about 7 days, so copy anything you keep to your own storage.
 - A running short reports `job.stage`: `planning`, `images`, `voice`, `rendering`. Once it succeeds, `job.result` holds `title`, `post_caption` and `scenes`.
 - Errors look like `{"error": {"code", "message", "issues"?}}`. `400 INVALID_REQUEST` lists `issues[{path, message}]`. `401` means a bad key, `404` an unknown job, `413` a body over 2 MB or an upload over 100 MB. `422` is the input's fault (`CONTENT_REJECTED` from the image safety filter, `INPUT_FETCH_FAILED`, `FFMPEG_FAILED`): change the input. `429` and `5xx` (`PLAN_FAILED`, `IMAGES_FAILED`, `TTS_FAILED`, `INTERNAL`) are worth a retry with backoff.
-- Webhooks POST the job JSON with `Reel-Signature: t=<unix>,v1=<hex hmac-sha256 of "t.body">`, up to 3 attempts. Check it with `verifyWebhook(rawBody, header, secret)` on the raw body before parsing. The secret is the `whsec_...` webhook secret issued with your key, not the API key.
+- Webhooks POST the job JSON with `Reelsdk-Signature: t=<unix>,v1=<hex hmac-sha256 of "t.body">`, up to 3 attempts. Check it with `verifyWebhook(rawBody, header, secret)` on the raw body before parsing. The secret is the `whsec_...` webhook secret issued with your key, not the API key.
 
 ```ts
 import { ReelSdk } from "./src/lib/reelsdk";
