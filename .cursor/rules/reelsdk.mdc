@@ -24,4 +24,4 @@ Rules:
 - Jobs are async: create calls wait up to 60 s (`?wait=0..300`), returning `200 {job}` when done or `202 {job}` while running. Poll `GET /v1/jobs/:id` (`202` running, `200` succeeded, `422`/`500` failed) or set `webhook_url`. Shorts take 1 to 2 minutes, so use `wait: 0` and poll or `waitForJob()`.
 - Read results from `job.outputs` (absolute URLs, expire after about 7 days; copy what you keep). Shorts also expose `job.stage` while running and `job.result` (`title`, `post_caption`, `scenes`) when done.
 - Errors are `{"error": {"code", "message", "issues"?}}`: `400 INVALID_REQUEST` with `issues[{path, message}]`, `401` bad key, `404` unknown job, `413` too large, `422` fix the input (`CONTENT_REJECTED`, `INPUT_FETCH_FAILED`, `FFMPEG_FAILED`), `429`/`5xx` retry with backoff.
-- Verify webhooks with `verifyWebhook(rawBody, header, secret)`: `Reel-Signature: t=<unix>,v1=<hex hmac-sha256 of "t.body">`, signed with the key's `whsec_...` webhook secret.
+- Verify webhooks with `verifyWebhook(rawBody, header, secret)`: `Reelsdk-Signature: t=<unix>,v1=<hex hmac-sha256 of "t.body">`, signed with the key's `whsec_...` webhook secret.
