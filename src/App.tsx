@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { ShortRequest } from "./lib/reelapi";
+import type { ShortRequest } from "./lib/reelsdk";
 import { createShort, getJob, isAccessError, setAccessCode, toApiError } from "./app/api";
 import { DEFAULT_SETTINGS, fromRequest, sanitizeSettings, toRequest, type Settings } from "./app/settings";
 import { useStoredState } from "./app/storage";

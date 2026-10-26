@@ -14,7 +14,7 @@ import {
   type ShortLanguage,
   type ShortRequest,
   type ShortStyle,
-} from "../lib/reelapi";
+} from "../lib/reelsdk";
 import { DURATIONS } from "./options";
 
 export type CaptionChoice = "auto" | "off" | CaptionPreset;

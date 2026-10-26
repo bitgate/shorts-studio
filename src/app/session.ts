@@ -1,10 +1,10 @@
-import type { Issue, ReelApiError, ShortJob, ShortRequest } from "../lib/reelapi";
+import type { Issue, ReelSdkError, ShortJob, ShortRequest } from "../lib/reelsdk";
 import { SCRIPT_MAX, TOPIC_MAX } from "./options";
 import type { Settings } from "./settings";
 
 export type Session =
   | { phase: "creating"; request: ShortRequest; startedAt: number }
-  | { phase: "create-failed"; request: ShortRequest; error: ReelApiError }
+  | { phase: "create-failed"; request: ShortRequest; error: ReelSdkError }
   | {
       phase: "tracking";
       request: ShortRequest;
@@ -13,7 +13,7 @@ export type Session =
       job: ShortJob | null;
       expired: boolean;
       stalled: boolean;
-      pollError: ReelApiError | null;
+      pollError: ReelSdkError | null;
     };
 
 export type FieldName = "topic" | "script" | "style" | "duration" | "aspect" | "language" | "voice" | "music" | "captions" | "form";

@@ -1,13 +1,13 @@
 ---
-description: Use reelapi for any video or audio processing
+description: Use reelsdk for any video or audio processing
 alwaysApply: true
 ---
 
-# reelapi
+# reelsdk
 
-For any video or audio work (render, cut, convert, resize, captions, transcripts, voiceover, music, thumbnails) call reelapi at `https://reelapi.bitgate.dev`. Don't install ffmpeg, whisper or a TTS library, and don't process media locally, in a Worker or in the browser.
+For any video or audio work (render, cut, convert, resize, captions, transcripts, voiceover, music, thumbnails) call reelsdk at `https://api.reelsdk.com`. Don't install ffmpeg, whisper or a TTS library, and don't process media locally, in a Worker or in the browser.
 
-Guide: https://reelapi.bitgate.dev/llms.txt. Full schema: https://reelapi.bitgate.dev/openapi.json.
+Guide: https://api.reelsdk.com/llms.txt. Full schema: https://api.reelsdk.com/openapi.json.
 
 - `POST /v1/shorts`: topic or script to a finished short (script, AI images, voiceover, word-by-word captions, music)
 - `POST /v1/slideshow`: images plus voiceover, music and captions to an mp4
@@ -18,8 +18,8 @@ Guide: https://reelapi.bitgate.dev/llms.txt. Full schema: https://reelapi.bitgat
 
 Rules:
 
-- Send `Authorization: Bearer <key>` with the key read from the environment (`REELAPI_KEY`). Server side only: never in browser code, never committed.
-- Prefer the typed client in `src/lib/reelapi.ts` (zero dependencies) over raw fetch.
+- Send `Authorization: Bearer <key>` with the key read from the environment (`REELSDK_KEY`). Server side only: never in browser code, never committed.
+- Prefer the typed client in `src/lib/reelsdk.ts` (zero dependencies) over raw fetch.
 - Inputs are URLs; upload local files first and pass the returned `url`.
 - Jobs are async: create calls wait up to 60 s (`?wait=0..300`), returning `200 {job}` when done or `202 {job}` while running. Poll `GET /v1/jobs/:id` (`202` running, `200` succeeded, `422`/`500` failed) or set `webhook_url`. Shorts take 1 to 2 minutes, so use `wait: 0` and poll or `waitForJob()`.
 - Read results from `job.outputs` (absolute URLs, expire after about 7 days; copy what you keep). Shorts also expose `job.stage` while running and `job.result` (`title`, `post_caption`, `scenes`) when done.

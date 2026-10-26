@@ -1,12 +1,12 @@
 /**
- * reelapi client. Zero dependencies: runs anywhere with fetch and Web Crypto
+ * reelsdk client. Zero dependencies: runs anywhere with fetch and Web Crypto
  * (Node 20+, Bun, Deno, Cloudflare Workers, browsers). Copy this file as is.
  *
- * Docs: https://reelapi.bitgate.dev/llms.txt
- * Schema: https://reelapi.bitgate.dev/openapi.json
+ * Docs: https://api.reelsdk.com/llms.txt
+ * Schema: https://api.reelsdk.com/openapi.json
  */
 
-export const DEFAULT_BASE_URL = "https://reelapi.bitgate.dev";
+export const DEFAULT_BASE_URL = "https://api.reelsdk.com";
 
 export const ASPECTS = ["9:16", "1:1", "16:9"] as const;
 export const SHORT_STYLES = [
@@ -187,7 +187,7 @@ export interface Issue {
   message: string;
 }
 
-export class ReelApiError extends Error {
+export class ReelSdkError extends Error {
   /** HTTP status; 0 when the request never got a response */
   readonly status: number;
   readonly code: string;
@@ -197,7 +197,7 @@ export class ReelApiError extends Error {
 
   constructor(status: number, code: string, message: string, issues: Issue[] = [], job: Job | null = null) {
     super(message);
-    this.name = "ReelApiError";
+    this.name = "ReelSdkError";
     this.status = status;
     this.code = code;
     this.issues = issues;
@@ -210,7 +210,7 @@ export class ReelApiError extends Error {
   }
 }
 
-export interface ReelApiOptions {
+export interface ReelSdkOptions {
   apiKey: string;
   baseUrl?: string;
   fetch?: typeof fetch;
@@ -237,13 +237,13 @@ export interface UploadOptions {
 
 type Answer = { status: number; data: unknown };
 
-export class ReelApi {
+export class ReelSdk {
   readonly #apiKey: string;
   readonly #baseUrl: string;
   readonly #fetch: typeof fetch;
 
-  constructor({ apiKey, baseUrl = DEFAULT_BASE_URL, fetch: fetchImpl = globalThis.fetch }: ReelApiOptions) {
-    if (!apiKey) throw new Error("reelapi: apiKey is required");
+  constructor({ apiKey, baseUrl = DEFAULT_BASE_URL, fetch: fetchImpl = globalThis.fetch }: ReelSdkOptions) {
+    if (!apiKey) throw new Error("reelsdk: apiKey is required");
 
     this.#apiKey = apiKey;
     this.#baseUrl = baseUrl.replace(/\/+$/, "");
@@ -277,7 +277,7 @@ export class ReelApi {
     return data as J;
   }
 
-  /** Polls with backoff until the job succeeds. Throws a ReelApiError carrying the job when it fails */
+  /** Polls with backoff until the job succeeds. Throws a ReelSdkError carrying the job when it fails */
   async waitForJob<J extends Job>(jobOrId: J | string, options: WaitOptions = {}): Promise<J> {
     const { timeoutMs = 15 * 60_000, signal, onUpdate } = options;
 
@@ -297,16 +297,16 @@ export class ReelApi {
 
         if (job.status === "succeeded") return job;
         if (job.status === "failed") {
-          throw new ReelApiError(status, job.error?.code ?? "JOB_FAILED", job.error?.message ?? "Job failed", [], job);
+          throw new ReelSdkError(status, job.error?.code ?? "JOB_FAILED", job.error?.message ?? "Job failed", [], job);
         }
       } catch (error) {
         // A blip while polling shouldn't end a two-minute wait
-        const transient = error instanceof ReelApiError && !error.job && error.retryable;
+        const transient = error instanceof ReelSdkError && !error.job && error.retryable;
         if (!transient || ++failures > 5) throw error;
       }
 
       if (Date.now() + delay > deadline) {
-        throw new ReelApiError(0, "WAIT_TIMEOUT", `Job ${id} did not finish within ${timeoutMs} ms`);
+        throw new ReelSdkError(0, "WAIT_TIMEOUT", `Job ${id} did not finish within ${timeoutMs} ms`);
       }
 
       await sleep(delay, signal);
@@ -357,7 +357,7 @@ export class ReelApi {
       });
     } catch (cause) {
       if (init.signal?.aborted) throw cause;
-      throw new ReelApiError(0, "NETWORK_ERROR", `Could not reach reelapi: ${describe(cause)}`);
+      throw new ReelSdkError(0, "NETWORK_ERROR", `Could not reach reelsdk: ${describe(cause)}`);
     }
 
     const text = await response.text();
@@ -368,7 +368,7 @@ export class ReelApi {
     if (response.ok) return { status: response.status, data: body };
 
     const error = isRecord(body) && isRecord(body.error) ? body.error : {};
-    throw new ReelApiError(
+    throw new ReelSdkError(
       response.status,
       typeof error.code === "string" ? error.code : `HTTP_${response.status}`,
       typeof error.message === "string" ? error.message : text.slice(0, 200) || response.statusText,

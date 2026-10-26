@@ -1,7 +1,9 @@
-import { ReelApi, ReelApiError, type Job } from "../src/lib/reelapi";
+import { ReelSdk, ReelSdkError, type Job } from "../src/lib/reelsdk";
 import { parseShortRequest } from "./validate";
 
 interface Env {
+  REELSDK_KEY?: string;
+  REELSDK_BASE_URL?: string;
   REELAPI_KEY?: string;
   REELAPI_BASE_URL?: string;
   ACCESS_CODE?: string;
@@ -17,11 +19,13 @@ export default {
     const denied = await checkAccessCode(request, env);
     if (denied) return denied;
 
-    if (!env.REELAPI_KEY) {
-      return fail(500, "MISSING_API_KEY", "REELAPI_KEY is not set. Put it in .dev.vars locally, or run `wrangler secret put REELAPI_KEY`.");
+    // Deployments from before the rename only have the REELAPI_* names
+    const apiKey = env.REELSDK_KEY || env.REELAPI_KEY;
+    if (!apiKey) {
+      return fail(500, "MISSING_API_KEY", "REELSDK_KEY is not set. Put it in .dev.vars locally, or run `wrangler secret put REELSDK_KEY`.");
     }
 
-    const reel = new ReelApi({ apiKey: env.REELAPI_KEY, baseUrl: env.REELAPI_BASE_URL || undefined });
+    const reel = new ReelSdk({ apiKey, baseUrl: env.REELSDK_BASE_URL || env.REELAPI_BASE_URL || undefined });
 
     try {
       if (pathname === "/api/shorts") {
@@ -40,7 +44,7 @@ export default {
   },
 } satisfies ExportedHandler<Env>;
 
-async function createShort(request: Request, reel: ReelApi): Promise<Response> {
+async function createShort(request: Request, reel: ReelSdk): Promise<Response> {
   const body = await request.text();
   if (body.length > MAX_BODY_BYTES) return fail(413, "PAYLOAD_TOO_LARGE", "Request body is too large");
 
@@ -66,7 +70,7 @@ async function createShort(request: Request, reel: ReelApi): Promise<Response> {
   return json({ job }, 202);
 }
 
-async function getJob(id: string, reel: ReelApi): Promise<Response> {
+async function getJob(id: string, reel: ReelSdk): Promise<Response> {
   if (!JOB_ID.test(id)) return fail(404, "NOT_FOUND", "unknown job");
 
   const job = await reel.getJob(id);
@@ -101,15 +105,15 @@ async function sameText(a: string, b: string): Promise<boolean> {
 }
 
 function upstreamFailure(error: unknown, route: string): Response {
-  if (!(error instanceof ReelApiError)) {
+  if (!(error instanceof ReelSdkError)) {
     console.error(JSON.stringify({ event: "worker_error", route, error: String(error) }));
     return fail(500, "INTERNAL", "Something went wrong on this server");
   }
 
-  console.error(JSON.stringify({ event: "reelapi_error", route, status: error.status, code: error.code, message: error.message }));
+  console.error(JSON.stringify({ event: "reelsdk_error", route, status: error.status, code: error.code, message: error.message }));
 
-  if (error.status === 401) return fail(500, "INVALID_API_KEY", "reelapi rejected REELAPI_KEY. Check the secret.");
-  if (error.status === 0) return fail(502, "UPSTREAM_UNREACHABLE", "Couldn't reach reelapi. Try again in a moment.");
+  if (error.status === 401) return fail(500, "INVALID_API_KEY", "reelsdk rejected REELSDK_KEY. Check the secret.");
+  if (error.status === 0) return fail(502, "UPSTREAM_UNREACHABLE", "Couldn't reach reelsdk. Try again in a moment.");
 
   const issues = error.issues.length > 0 ? { issues: error.issues } : {};
   return json({ error: { code: error.code, message: error.message, ...issues } }, error.status);

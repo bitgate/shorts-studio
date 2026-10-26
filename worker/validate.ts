@@ -8,7 +8,7 @@ import {
   SHORT_STYLES,
   type Issue,
   type ShortRequest,
-} from "../src/lib/reelapi";
+} from "../src/lib/reelsdk";
 
 export const TOPIC_MAX = 500;
 export const SCRIPT_MAX = 3000;

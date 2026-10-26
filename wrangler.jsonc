@@ -14,14 +14,14 @@
   },
   "upload_source_maps": true,
   "vars": {
-    "REELAPI_BASE_URL": "https://reelapi.bitgate.dev"
+    "REELSDK_BASE_URL": "https://api.reelsdk.com"
   },
   "env": {
     "demo": {
       "workers_dev": false,
       "routes": [{ "pattern": "shorts-studio.bitgate.dev/*", "zone_name": "bitgate.dev" }],
       "vars": {
-        "REELAPI_BASE_URL": "https://reelapi.bitgate.dev"
+        "REELSDK_BASE_URL": "https://api.reelsdk.com"
       }
     }
   }

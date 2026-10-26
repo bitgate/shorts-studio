@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { SHORT_STYLES, type ShortStyle } from "../lib/reelapi";
+import { SHORT_STYLES, type ShortStyle } from "../lib/reelsdk";
 import { STYLES } from "../app/options";
 import { Icon, cn } from "./ui";
 

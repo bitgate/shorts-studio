@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ASPECTS, EN_VOICES, ES_VOICES, MUSIC_MOODS, SHORT_LANGUAGES, type Aspect, type EnVoice, type EsVoice } from "../lib/reelapi";
+import { ASPECTS, EN_VOICES, ES_VOICES, MUSIC_MOODS, SHORT_LANGUAGES, type Aspect, type EnVoice, type EsVoice } from "../lib/reelsdk";
 import { CAPTIONS, DURATIONS, EXAMPLE_TOPICS, LANGUAGES, MUSIC, SCRIPT_MAX, STYLES, TOPIC_MAX } from "../app/options";
 import type { CaptionChoice, Settings } from "../app/settings";
 import type { FieldErrors } from "../app/session";

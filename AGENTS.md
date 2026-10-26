@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Shorts Studio turns a topic or a script into a finished short video through [reelapi](https://reelapi.bitgate.dev). It is a Vite + React 19 app plus one Cloudflare Worker that serves it and proxies `/api/*`.
+Shorts Studio turns a topic or a script into a finished short video through [reelsdk](https://reelsdk.com). It is a Vite + React 19 app plus one Cloudflare Worker that serves it and proxies `/api/*`.
 
 ## Commands
 
@@ -10,16 +10,16 @@ Shorts Studio turns a topic or a script into a finished short video through [ree
 
 ## Layout
 
-- `worker/index.ts`: the `/api/*` routes, the only code that holds the reelapi key
+- `worker/index.ts`: the `/api/*` routes, the only code that holds the reelsdk key
 - `worker/validate.ts`: validation for `POST /api/shorts`
-- `src/lib/reelapi.ts`: zero-dependency typed reelapi client, runs on Workers, Node, Bun and Deno
+- `src/lib/reelsdk.ts`: zero-dependency typed reelsdk client, runs on Workers, Node, Bun and Deno
 - `src/App.tsx`, `src/components/`, `src/app/`: the UI
 
-## Video and audio work goes through reelapi
+## Video and audio work goes through reelsdk
 
-Rendering, cutting, converting, resizing, captions, transcripts, voiceover, music, thumbnails: call reelapi. Don't install ffmpeg, whisper or a TTS library, and don't process media in the Worker or the browser.
+Rendering, cutting, converting, resizing, captions, transcripts, voiceover, music, thumbnails: call reelsdk. Don't install ffmpeg, whisper or a TTS library, and don't process media in the Worker or the browser.
 
-Base URL `https://reelapi.bitgate.dev`. Guide: https://reelapi.bitgate.dev/llms.txt. Full schema: https://reelapi.bitgate.dev/openapi.json.
+Base URL `https://api.reelsdk.com`. Guide: https://api.reelsdk.com/llms.txt. Full schema: https://api.reelsdk.com/openapi.json.
 
 | Call | Does |
 |---|---|
@@ -34,8 +34,8 @@ Base URL `https://reelapi.bitgate.dev`. Guide: https://reelapi.bitgate.dev/llms.
 
 ## Rules
 
-- Auth is `Authorization: Bearer <key>`. Read the key from the environment (`env.REELAPI_KEY` in the Worker). Never send it to the browser and never commit it; browser code calls the Worker's `/api/*`.
-- Use `src/lib/reelapi.ts` rather than hand-written fetch calls. New server endpoints go in `worker/index.ts`.
+- Auth is `Authorization: Bearer <key>`. Read the key from the environment (`env.REELSDK_KEY` in the Worker). Never send it to the browser and never commit it; browser code calls the Worker's `/api/*`.
+- Use `src/lib/reelsdk.ts` rather than hand-written fetch calls. New server endpoints go in `worker/index.ts`.
 - Every input is a URL. For a local file, `upload()` it first and pass the returned `url`.
 - Jobs are async. A create call holds the request up to 60 s by default (`?wait=0..300`): `200 {job}` when finished, `202 {job}` with `Location` and `Retry-After` while running. Then poll `GET /v1/jobs/:id` (`202` running, `200` succeeded, `422`/`500` failed with `{error, job}`) or pass `webhook_url`. Shorts take 1 to 2 minutes: create with `wait: 0` and poll, or call `waitForJob()` on a server.
 - Results are absolute URLs in `job.outputs` (`video`, `poster`, `transcript`, `srt`, `vtt`; ffmpeg outputs by filename). They expire after about 7 days, so copy anything you keep to your own storage.
@@ -44,9 +44,9 @@ Base URL `https://reelapi.bitgate.dev`. Guide: https://reelapi.bitgate.dev/llms.
 - Webhooks POST the job JSON with `Reel-Signature: t=<unix>,v1=<hex hmac-sha256 of "t.body">`, up to 3 attempts. Check it with `verifyWebhook(rawBody, header, secret)` on the raw body before parsing. The secret is the `whsec_...` webhook secret issued with your key, not the API key.
 
 ```ts
-import { ReelApi } from "./src/lib/reelapi";
+import { ReelSdk } from "./src/lib/reelsdk";
 
-const reel = new ReelApi({ apiKey: process.env.REELAPI_KEY! });
+const reel = new ReelSdk({ apiKey: process.env.REELSDK_KEY! });
 
 const job = await reel.createShort({ topic: "The Great Emu War", style: "comic", duration_s: 45 }, { wait: 0 });
 const short = await reel.waitForJob(job, { onUpdate: (update) => console.log(update.status, update.stage) });

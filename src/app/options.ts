@@ -1,4 +1,4 @@
-import type { Aspect, CaptionPreset, MusicMood, ShortLanguage, ShortStage, ShortStyle } from "../lib/reelapi";
+import type { Aspect, CaptionPreset, MusicMood, ShortLanguage, ShortStage, ShortStyle } from "../lib/reelsdk";
 import cinematic from "../assets/styles/cinematic.webp";
 import photoreal from "../assets/styles/photoreal.webp";
 import anime from "../assets/styles/anime.webp";

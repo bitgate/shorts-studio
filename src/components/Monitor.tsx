@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import type { Aspect, CaptionPreset, ShortJob, ShortRequest, ShortStyle } from "../lib/reelapi";
+import type { Aspect, CaptionPreset, ShortJob, ShortRequest, ShortStyle } from "../lib/reelsdk";
 import { OUTPUT_SIZES, STAGES, STYLES } from "../app/options";
 import { describeFailure } from "../app/errors";
 import { formatClock, videoFileName } from "../app/format";

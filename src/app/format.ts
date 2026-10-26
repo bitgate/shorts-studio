@@ -1,4 +1,4 @@
-import type { ShortLanguage } from "../lib/reelapi";
+import type { ShortLanguage } from "../lib/reelsdk";
 
 // Narration pace of the default voices, in words per second
 const SPEECH_RATE: Partial<Record<ShortLanguage, number>> = { en: 2.8, es: 1.96 };

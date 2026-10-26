@@ -11,12 +11,12 @@ export function Header() {
 
       <div className="flex items-center gap-1">
         <a
-          href="https://reelapi.bitgate.dev"
+          href="https://reelsdk.com"
           target="_blank"
           rel="noreferrer"
           className="flex items-center gap-1 rounded-lg px-2.5 py-2 text-[13px] text-dim transition-colors hover:text-ink"
         >
-          reelapi
+          reelsdk
           <Icon name="arrowUpRight" className="size-3.5" />
         </a>
         <ThemeToggle />
