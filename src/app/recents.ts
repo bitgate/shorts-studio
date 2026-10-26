@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { JobStatus, ShortJob, ShortRequest, ShortStage } from "../lib/reelapi";
+import type { JobStatus, ShortJob, ShortRequest, ShortStage } from "../lib/reelsdk";
 import { useStoredState } from "./storage";
 
 export interface Recent {

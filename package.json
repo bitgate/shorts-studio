@@ -1,7 +1,7 @@
 {
   "name": "shorts-studio",
   "version": "0.1.0",
-  "description": "Topic in, finished short out. Open-source starter for reelapi.",
+  "description": "Topic in, finished short out. Open-source starter for reelsdk.",
   "license": "MIT",
   "private": true,
   "type": "module",
@@ -39,8 +39,8 @@
   },
   "cloudflare": {
     "bindings": {
-      "REELAPI_KEY": {
-        "description": "Your reelapi key (`rk_live_...`). Get one at [reelapi.bitgate.dev](https://reelapi.bitgate.dev)."
+      "REELSDK_KEY": {
+        "description": "Your reelsdk key (`rk_live_...`). Get one at [reelsdk.com](https://reelsdk.com)."
       }
     }
   },

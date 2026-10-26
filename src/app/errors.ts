@@ -26,7 +26,7 @@ export function describeFailure(code: string, status: number, message: string): 
     case "NETWORK_ERROR":
       return { title: "Can't connect", hint: "Check your connection, then try again.", fixInput: false };
     case "UPSTREAM_UNREACHABLE":
-      return { title: "Can't reach reelapi", hint: "The server couldn't reach the video API. Try again in a moment.", fixInput: false };
+      return { title: "Can't reach reelsdk", hint: "The server couldn't reach the video API. Try again in a moment.", fixInput: false };
     case "CONNECTION_LOST":
       return { title: "Lost track of this one", hint: "It's probably still rendering. Reconnect to check on it.", fixInput: false };
     case "MISSING_API_KEY":

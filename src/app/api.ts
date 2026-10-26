@@ -1,6 +1,6 @@
-import { ReelApiError, type ShortJob, type ShortRequest } from "../lib/reelapi";
+import { ReelSdkError, type ShortJob, type ShortRequest } from "../lib/reelsdk";
 
-// The browser talks to our Worker (/api), which holds the reelapi key
+// The browser talks to our Worker (/api), which holds the reelsdk key
 const ACCESS_CODE_KEY = "shorts-studio:access-code";
 
 export function setAccessCode(code: string): void {
@@ -19,13 +19,13 @@ export function getJob(id: string): Promise<ShortJob> {
   return call(`/api/jobs/${encodeURIComponent(id)}`);
 }
 
-export function isAccessError(error: ReelApiError): boolean {
+export function isAccessError(error: ReelSdkError): boolean {
   return error.status === 401 && error.code.startsWith("ACCESS_CODE");
 }
 
-export function toApiError(error: unknown): ReelApiError {
-  if (error instanceof ReelApiError) return error;
-  return new ReelApiError(0, "CLIENT_ERROR", error instanceof Error ? error.message : String(error));
+export function toApiError(error: unknown): ReelSdkError {
+  if (error instanceof ReelSdkError) return error;
+  return new ReelSdkError(0, "CLIENT_ERROR", error instanceof Error ? error.message : String(error));
 }
 
 async function call(path: string, init: RequestInit = {}): Promise<ShortJob> {
@@ -37,14 +37,14 @@ async function call(path: string, init: RequestInit = {}): Promise<ShortJob> {
   try {
     response = await fetch(path, { ...init, headers });
   } catch {
-    throw new ReelApiError(0, "NETWORK_ERROR", "Can't reach the server. Check your connection.");
+    throw new ReelSdkError(0, "NETWORK_ERROR", "Can't reach the server. Check your connection.");
   }
 
   const body = await response.json().catch(() => null);
   if (response.ok && body?.job) return body.job as ShortJob;
 
   const error = body?.error ?? {};
-  throw new ReelApiError(
+  throw new ReelSdkError(
     response.status,
     error.code ?? `HTTP_${response.status}`,
     error.message ?? (response.statusText || "Request failed"),

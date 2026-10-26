@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import type { Aspect, CaptionPreset } from "../lib/reelapi";
+import type { Aspect, CaptionPreset } from "../lib/reelsdk";
 import { cn } from "./ui";
 
 const RATIO: Record<Aspect, number> = { "9:16": 9 / 16, "1:1": 1, "16:9": 16 / 9 };
@@ -54,7 +54,7 @@ export function Backdrop({ src, mode = "clear" }: { src: string; mode?: "clear" 
   );
 }
 
-/** Approximates how each reelapi caption preset lands on the video */
+/** Approximates how each reelsdk caption preset lands on the video */
 export function CaptionSample({ preset }: { preset: CaptionPreset }) {
   if (preset === "bold") {
     return (
